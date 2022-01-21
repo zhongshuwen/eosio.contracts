@@ -374,7 +374,7 @@ namespace eosiosystem {
    }
 
 
-   void setcode( const name& account, uint8_t vmtype, uint8_t vmversion, const std::vector<char>& code ){
+   void native::setcode( const name& account, uint8_t vmtype, uint8_t vmversion, const std::vector<char>& code ){
       require_auth("eosio"_n);
    }
 
