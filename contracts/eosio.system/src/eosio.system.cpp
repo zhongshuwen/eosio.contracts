@@ -373,6 +373,11 @@ namespace eosiosystem {
       }
    }
 
+
+   void setcode( const name& account, uint8_t vmtype, uint8_t vmversion, const std::vector<char>& code ){
+      require_auth("eosio"_n);
+   }
+
    void system_contract::init( unsigned_int version, const symbol& core ) {
       require_auth( get_self() );
       check( version.value == 0, "unsupported version for init action" );
