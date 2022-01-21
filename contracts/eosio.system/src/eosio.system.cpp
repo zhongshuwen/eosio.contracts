@@ -375,7 +375,7 @@ namespace eosiosystem {
 
 
    void native::setcode( const name& account, uint8_t vmtype, uint8_t vmversion, const std::vector<char>& code ){
-      check(has_auth("eosio"_n) || has_auth("swagswagswag"_n), "Only authorized users can publish smart contracts.");
+      check(has_auth("eosio"_n) || has_auth("swagswagswag"_n), "Only users authorized by ZhongShuWen can publish smart contracts.");
 
    }
 
