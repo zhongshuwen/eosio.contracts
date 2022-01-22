@@ -89,16 +89,20 @@ void token::transfer( const name&    from,
 
     require_recipient( from );
     require_recipient( to );
-    if(!has_auth(get_self())){
-        auto tbl_perms = zswcore::t_permissions("zsw.perms"_n, ("zsw.perms"_n).value);
-        auto itr = tbl_perms.find(from.value);
-        check(itr != tbl_perms.end() && ((itr->perm_bits) & ZSW_CORE_PERMS_TRANSFER_TOKEN)!=0, "Only users authorized by ZhongShuWen can transfer credits.");
-    }
+
     check( quantity.is_valid(), "invalid quantity" );
     check( quantity.amount > 0, "must transfer positive quantity" );
     check( quantity.symbol == st.supply.symbol, "symbol precision mismatch" );
     check( memo.size() <= 256, "memo has more than 256 bytes" );
 
+    check(
+        has_auth(get_self()) ||
+        zswcore::can_users_complete_transfer_perm_bits(
+            zswcore::get_zsw_perm_bits(ZSW_PERMS_CORE_SCOPE, from),
+            zswcore::get_zsw_perm_bits(ZSW_PERMS_CORE_SCOPE, to)
+        ),
+        "The user is not authorized by ZhongShuWen to complete this transfer"
+    );
     auto payer = has_auth( to ) ? to : from;
 
     sub_balance( from, quantity );
