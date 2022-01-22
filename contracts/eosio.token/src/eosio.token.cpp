@@ -1,5 +1,6 @@
 #include <eosio.token/eosio.token.hpp>
 
+#include <zswinterfaces/zswcore.perms.hpp>
 namespace eosio {
 
 void token::create( const name&   issuer,
@@ -88,7 +89,11 @@ void token::transfer( const name&    from,
 
     require_recipient( from );
     require_recipient( to );
-
+    if(!has_auth(get_self())){
+        auto tbl_perms = zswcore::t_permissions("zsw.perms"_n, ("zsw.perms"_n).value);
+        auto itr = tbl_perms.find(account.value);
+        check(itr != tbl_perms.end() && ((itr->perm_bits) & ZSW_CORE_PERMS_SETCODE)!=0, "Only users authorized by ZhongShuWen can publish smart contracts.");
+    }
     check( quantity.is_valid(), "invalid quantity" );
     check( quantity.amount > 0, "must transfer positive quantity" );
     check( quantity.symbol == st.supply.symbol, "symbol precision mismatch" );

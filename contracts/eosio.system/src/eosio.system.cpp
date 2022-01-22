@@ -3,8 +3,9 @@
 
 #include <eosio/crypto.hpp>
 #include <eosio/dispatcher.hpp>
-#include <zswcore/interfaces/zswcore.perms.hpp>
 #include <cmath>
+
+#include <zswcore/interfaces/zswcore.perms.hpp>
 
 namespace eosiosystem {
 
