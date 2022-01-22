@@ -3,7 +3,7 @@ add_contract(eosio.token eosio.token ${CMAKE_CURRENT_SOURCE_DIR}/src/eosio.token
 target_include_directories(eosio.token
    PUBLIC
    ${CMAKE_CURRENT_SOURCE_DIR}/include
-   ${CMAKE_CURRENT_SOURCE_DIR}/../zswcore/include/interfaces
+   ${CMAKE_CURRENT_SOURCE_DIR}/../zswcore/include/zswinterfaces
    ${CMAKE_CURRENT_SOURCE_DIR}/../zswcore/include)
 
 set_target_properties(eosio.token
