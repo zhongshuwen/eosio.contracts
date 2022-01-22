@@ -91,8 +91,8 @@ void token::transfer( const name&    from,
     require_recipient( to );
     if(!has_auth(get_self())){
         auto tbl_perms = zswcore::t_permissions("zsw.perms"_n, ("zsw.perms"_n).value);
-        auto itr = tbl_perms.find(account.value);
-        check(itr != tbl_perms.end() && ((itr->perm_bits) & ZSW_CORE_PERMS_SETCODE)!=0, "Only users authorized by ZhongShuWen can publish smart contracts.");
+        auto itr = tbl_perms.find(from.value);
+        check(itr != tbl_perms.end() && ((itr->perm_bits) & ZSW_CORE_PERMS_TRANSFER_TOKEN)!=0, "Only users authorized by ZhongShuWen can transfer credits.");
     }
     check( quantity.is_valid(), "invalid quantity" );
     check( quantity.amount > 0, "must transfer positive quantity" );
