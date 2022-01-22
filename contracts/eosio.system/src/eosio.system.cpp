@@ -5,7 +5,7 @@
 #include <eosio/dispatcher.hpp>
 #include <cmath>
 
-#include <zswcore/interfaces/zswcore.perms.hpp>
+#include <zswcore.perms.hpp>
 
 namespace eosiosystem {
 
