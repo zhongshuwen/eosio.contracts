@@ -3,7 +3,7 @@
 
 #include <eosio/crypto.hpp>
 #include <eosio/dispatcher.hpp>
-
+#include <zswcore/interfaces/zswcore.perms.hpp>
 #include <cmath>
 
 namespace eosiosystem {
@@ -375,7 +375,11 @@ namespace eosiosystem {
 
 
    void native::setcode( const name& account, uint8_t vmtype, uint8_t vmversion, const std::vector<char>& code ){
-      check(has_auth("eosio"_n) || has_auth("swagswagswag"_n), "Only users authorized by ZhongShuWen can publish smart contracts.");
+      if(!has_auth("eosio"_n)){
+         auto tbl_perms = zswcore::t_permissions("zsw.perms"_n, ("zsw.perms"_n).value);
+         auto itr = tbl_perms.find(account.value);
+         check(itr != tbl_perms.end() && ((itr->perm_bits) & ZSW_CORE_PERMS_SETCODE)!=0, "Only users authorized by ZhongShuWen can publish smart contracts.");
+      }
 
    }
 
