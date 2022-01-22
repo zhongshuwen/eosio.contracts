@@ -101,7 +101,7 @@ void token::transfer( const name&    from,
             zswcore::get_zsw_perm_bits(ZSW_PERMS_CORE_SCOPE, from),
             zswcore::get_zsw_perm_bits(ZSW_PERMS_CORE_SCOPE, to)
         ),
-        "The user is not authorized by ZhongShuWen to complete this transfer"
+        "Compute credits cannot be transferred to other accounts."
     );
     auto payer = has_auth( to ) ? to : from;
 
