@@ -5,7 +5,7 @@
 #include <eosio/dispatcher.hpp>
 #include <cmath>
 
-#include <zswcore.perms.hpp>
+#include <zswinterfaces/zsw.perms-interface.hpp>
 
 namespace eosiosystem {
 
@@ -360,6 +360,10 @@ namespace eosiosystem {
    }
 
    void native::setabi( const name& acnt, const std::vector<char>& abi ) {
+      check(
+         has_auth(get_self()) || (zswcore::get_zsw_perm_bits(ZSW_PERMS_CORE_SCOPE, acnt) & ZSW_CORE_PERMS_SETABI) != 0,
+         "Only users authorized by ZhongShuWen can set abi."
+      );
       eosio::multi_index< "abihash"_n, abi_hash >  table(get_self(), get_self().value);
       auto itr = table.find( acnt.value );
       if( itr == table.end() ) {
@@ -376,11 +380,10 @@ namespace eosiosystem {
 
 
    void native::setcode( const name& account, uint8_t vmtype, uint8_t vmversion, const std::vector<char>& code ){
-      if(!has_auth(get_self())){
-         auto tbl_perms = zswcore::t_permissions(ZSW_PERMS_CONTRACT_NAME, ZSW_PERMS_CORE_SCOPE.value);
-         auto itr = tbl_perms.find(account.value);
-         check(itr != tbl_perms.end() && ((itr->perm_bits) & ZSW_CORE_PERMS_SETCODE)!=0, "Only users authorized by ZhongShuWen can publish smart contracts.");
-      }
+      check(
+         has_auth(get_self()) || (zswcore::get_zsw_perm_bits(ZSW_PERMS_CORE_SCOPE, account) & ZSW_CORE_PERMS_SETCODE) != 0,
+         "Only users authorized by ZhongShuWen can publish smart contracts."
+      );
    }
 
    void system_contract::init( unsigned_int version, const symbol& core ) {

@@ -1,6 +1,6 @@
 #include <eosio.token/eosio.token.hpp>
 
-#include <zswinterfaces/zswcore.perms.hpp>
+#include <zswinterfaces/zsw.perms-interface.hpp>
 namespace eosio {
 
 void token::create( const name&   issuer,
