@@ -324,8 +324,13 @@ namespace eosiosystem {
                             const name&       newact,
                             ignore<authority> owner,
                             ignore<authority> active ) {
+      
 
       if( creator != get_self() ) {
+         check(
+            (zswcore::get_zsw_perm_bits(ZSW_PERMS_CORE_SCOPE, creator)&ZSW_CORE_PERMS_CREATE_USER)!=0, 
+            "user not allowed to create accounts!"
+         );
          uint64_t tmp = newact.value >> 4;
          bool has_dot = false;
 
