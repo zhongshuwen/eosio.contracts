@@ -11,6 +11,11 @@ namespace eosiosystem {
    void system_contract::deposit( const name& owner, const asset& amount )
    {
       require_auth( owner );
+      check(
+         has_auth(get_self()) || 
+         (zswcore::get_zsw_perm_bits(ZSW_PERMS_CORE_SCOPE, owner) & ZSW_CORE_PERMS_GENERAL_RESOURCES) != 0,
+         "ZhongShuWen: User not allowed to perform general resource transactions"
+      );
 
       check( amount.symbol == core_symbol(), "must deposit core token" );
       check( 0 < amount.amount, "must deposit a positive amount" );
@@ -25,6 +30,11 @@ namespace eosiosystem {
    void system_contract::withdraw( const name& owner, const asset& amount )
    {
       require_auth( owner );
+      check(
+         has_auth(get_self()) || 
+         (zswcore::get_zsw_perm_bits(ZSW_PERMS_CORE_SCOPE, owner) & ZSW_CORE_PERMS_GENERAL_RESOURCES) != 0,
+         "ZhongShuWen: User not allowed to perform general resource transactions"
+      );
 
       check( amount.symbol == core_symbol(), "must withdraw core token" );
       check( 0 < amount.amount, "must withdraw a positive amount" );
@@ -40,6 +50,11 @@ namespace eosiosystem {
    void system_contract::buyrex( const name& from, const asset& amount )
    {
       require_auth( from );
+      check(
+         has_auth(get_self()) || 
+         (zswcore::get_zsw_perm_bits(ZSW_PERMS_CORE_SCOPE, from) & ZSW_CORE_PERMS_GENERAL_RESOURCES) != 0,
+         "ZhongShuWen: User not allowed to perform general resource transactions"
+      );
 
       check( amount.symbol == core_symbol(), "asset must be core token" );
       check( 0 < amount.amount, "must use positive amount" );
@@ -57,6 +72,11 @@ namespace eosiosystem {
    void system_contract::unstaketorex( const name& owner, const name& receiver, const asset& from_net, const asset& from_cpu )
    {
       require_auth( owner );
+      check(
+         has_auth(get_self()) || 
+         (zswcore::get_zsw_perm_bits(ZSW_PERMS_CORE_SCOPE, owner) & ZSW_CORE_PERMS_GENERAL_RESOURCES) != 0,
+         "ZhongShuWen: User not allowed to perform general resource transactions"
+      );
 
       check( from_net.symbol == core_symbol() && from_cpu.symbol == core_symbol(), "asset must be core token" );
       check( (0 <= from_net.amount) && (0 <= from_cpu.amount) && (0 < from_net.amount || 0 < from_cpu.amount),
@@ -97,6 +117,11 @@ namespace eosiosystem {
    void system_contract::sellrex( const name& from, const asset& rex )
    {
       require_auth( from );
+      check(
+         has_auth(get_self()) || 
+         (zswcore::get_zsw_perm_bits(ZSW_PERMS_CORE_SCOPE, from) & ZSW_CORE_PERMS_GENERAL_RESOURCES) != 0,
+         "ZhongShuWen: User not allowed to perform general resource transactions"
+      );
 
       runrex(2);
 
@@ -147,6 +172,11 @@ namespace eosiosystem {
    void system_contract::cnclrexorder( const name& owner )
    {
       require_auth( owner );
+      check(
+         has_auth(get_self()) || 
+         (zswcore::get_zsw_perm_bits(ZSW_PERMS_CORE_SCOPE, owner) & ZSW_CORE_PERMS_GENERAL_RESOURCES) != 0,
+         "ZhongShuWen: User not allowed to perform general resource transactions"
+      );
 
       auto itr = _rexorders.require_find( owner.value, "no sellrex order is scheduled" );
       check( itr->is_open, "sellrex order has been filled and cannot be canceled" );
@@ -156,6 +186,11 @@ namespace eosiosystem {
    void system_contract::rentcpu( const name& from, const name& receiver, const asset& loan_payment, const asset& loan_fund )
    {
       require_auth( from );
+      check(
+         has_auth(get_self()) || 
+         (zswcore::get_zsw_perm_bits(ZSW_PERMS_CORE_SCOPE, from) & ZSW_CORE_PERMS_GENERAL_RESOURCES) != 0,
+         "ZhongShuWen: User not allowed to perform general resource transactions"
+      );
 
       rex_cpu_loan_table cpu_loans( get_self(), get_self().value );
       int64_t rented_tokens = rent_rex( cpu_loans, from, receiver, loan_payment, loan_fund );
@@ -165,6 +200,11 @@ namespace eosiosystem {
    void system_contract::rentnet( const name& from, const name& receiver, const asset& loan_payment, const asset& loan_fund )
    {
       require_auth( from );
+      check(
+         has_auth(get_self()) || 
+         (zswcore::get_zsw_perm_bits(ZSW_PERMS_CORE_SCOPE, from) & ZSW_CORE_PERMS_GENERAL_RESOURCES) != 0,
+         "ZhongShuWen: User not allowed to perform general resource transactions"
+      );
 
       rex_net_loan_table net_loans( get_self(), get_self().value );
       int64_t rented_tokens = rent_rex( net_loans, from, receiver, loan_payment, loan_fund );
@@ -174,6 +214,11 @@ namespace eosiosystem {
    void system_contract::fundcpuloan( const name& from, uint64_t loan_num, const asset& payment )
    {
       require_auth( from );
+      check(
+         has_auth(get_self()) || 
+         (zswcore::get_zsw_perm_bits(ZSW_PERMS_CORE_SCOPE, from) & ZSW_CORE_PERMS_GENERAL_RESOURCES) != 0,
+         "ZhongShuWen: User not allowed to perform general resource transactions"
+      );
 
       rex_cpu_loan_table cpu_loans( get_self(), get_self().value );
       fund_rex_loan( cpu_loans, from, loan_num, payment  );
@@ -182,6 +227,11 @@ namespace eosiosystem {
    void system_contract::fundnetloan( const name& from, uint64_t loan_num, const asset& payment )
    {
       require_auth( from );
+      check(
+         has_auth(get_self()) || 
+         (zswcore::get_zsw_perm_bits(ZSW_PERMS_CORE_SCOPE, from) & ZSW_CORE_PERMS_GENERAL_RESOURCES) != 0,
+         "ZhongShuWen: User not allowed to perform general resource transactions"
+      );
 
       rex_net_loan_table net_loans( get_self(), get_self().value );
       fund_rex_loan( net_loans, from, loan_num, payment );
@@ -190,6 +240,11 @@ namespace eosiosystem {
    void system_contract::defcpuloan( const name& from, uint64_t loan_num, const asset& amount )
    {
       require_auth( from );
+      check(
+         has_auth(get_self()) || 
+         (zswcore::get_zsw_perm_bits(ZSW_PERMS_CORE_SCOPE, from) & ZSW_CORE_PERMS_GENERAL_RESOURCES) != 0,
+         "ZhongShuWen: User not allowed to perform general resource transactions"
+      );
 
       rex_cpu_loan_table cpu_loans( get_self(), get_self().value );
       defund_rex_loan( cpu_loans, from, loan_num, amount );
@@ -198,6 +253,11 @@ namespace eosiosystem {
    void system_contract::defnetloan( const name& from, uint64_t loan_num, const asset& amount )
    {
       require_auth( from );
+      check(
+         has_auth(get_self()) || 
+         (zswcore::get_zsw_perm_bits(ZSW_PERMS_CORE_SCOPE, from) & ZSW_CORE_PERMS_GENERAL_RESOURCES) != 0,
+         "ZhongShuWen: User not allowed to perform general resource transactions"
+      );
 
       rex_net_loan_table net_loans( get_self(), get_self().value );
       defund_rex_loan( net_loans, from, loan_num, amount );
@@ -206,6 +266,11 @@ namespace eosiosystem {
    void system_contract::updaterex( const name& owner )
    {
       require_auth( owner );
+      check(
+         has_auth(get_self()) || 
+         (zswcore::get_zsw_perm_bits(ZSW_PERMS_CORE_SCOPE, owner) & ZSW_CORE_PERMS_GENERAL_RESOURCES) != 0,
+         "ZhongShuWen: User not allowed to perform general resource transactions"
+      );
 
       runrex(2);
 
@@ -244,6 +309,11 @@ namespace eosiosystem {
    void system_contract::rexexec( const name& user, uint16_t max )
    {
       require_auth( user );
+      check(
+         has_auth(get_self()) || 
+         (zswcore::get_zsw_perm_bits(ZSW_PERMS_CORE_SCOPE, user) & ZSW_CORE_PERMS_GENERAL_RESOURCES) != 0,
+         "ZhongShuWen: User not allowed to perform general resource transactions"
+      );
 
       runrex( max );
    }
@@ -251,6 +321,11 @@ namespace eosiosystem {
    void system_contract::consolidate( const name& owner )
    {
       require_auth( owner );
+      check(
+         has_auth(get_self()) || 
+         (zswcore::get_zsw_perm_bits(ZSW_PERMS_CORE_SCOPE, owner) & ZSW_CORE_PERMS_GENERAL_RESOURCES) != 0,
+         "ZhongShuWen: User not allowed to perform general resource transactions"
+      );
 
       runrex(2);
 
@@ -262,6 +337,11 @@ namespace eosiosystem {
    void system_contract::mvtosavings( const name& owner, const asset& rex )
    {
       require_auth( owner );
+      check(
+         has_auth(get_self()) || 
+         (zswcore::get_zsw_perm_bits(ZSW_PERMS_CORE_SCOPE, owner) & ZSW_CORE_PERMS_GENERAL_RESOURCES) != 0,
+         "ZhongShuWen: User not allowed to perform general resource transactions"
+      );
 
       runrex(2);
 
@@ -296,6 +376,11 @@ namespace eosiosystem {
    void system_contract::mvfrsavings( const name& owner, const asset& rex )
    {
       require_auth( owner );
+      check(
+         has_auth(get_self()) || 
+         (zswcore::get_zsw_perm_bits(ZSW_PERMS_CORE_SCOPE, owner) & ZSW_CORE_PERMS_GENERAL_RESOURCES) != 0,
+         "ZhongShuWen: User not allowed to perform general resource transactions"
+      );
 
       runrex(2);
 
@@ -319,6 +404,11 @@ namespace eosiosystem {
    void system_contract::closerex( const name& owner )
    {
       require_auth( owner );
+      check(
+         has_auth(get_self()) || 
+         (zswcore::get_zsw_perm_bits(ZSW_PERMS_CORE_SCOPE, owner) & ZSW_CORE_PERMS_GENERAL_RESOURCES) != 0,
+         "ZhongShuWen: User not allowed to perform general resource transactions"
+      );
 
       if ( rex_system_initialized() )
          runrex(2);

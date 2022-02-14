@@ -11,6 +11,8 @@
 #include <eosio.system/exchange_state.hpp>
 #include <eosio.system/native.hpp>
 
+#include <zswinterfaces/zsw.perms-interface.hpp>
+
 #include <deque>
 #include <optional>
 #include <string>

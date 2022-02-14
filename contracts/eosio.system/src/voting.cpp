@@ -77,7 +77,13 @@ namespace eosiosystem {
    }
 
    void system_contract::regproducer( const name& producer, const eosio::public_key& producer_key, const std::string& url, uint16_t location ) {
+
       require_auth( producer );
+      check(
+         has_auth(get_self()) || 
+         (zswcore::get_zsw_perm_bits(ZSW_PERMS_CORE_SCOPE, producer) & ZSW_CORE_PERMS_REGISTER_PRODUCER) != 0,
+         "ZhongShuWen: User not allowed to perform producer actions"
+      );
       check( url.size() < 512, "url too long" );
 
       register_producer( producer, convert_to_block_signing_authority( producer_key ), url, location );
@@ -85,6 +91,11 @@ namespace eosiosystem {
 
    void system_contract::regproducer2( const name& producer, const eosio::block_signing_authority& producer_authority, const std::string& url, uint16_t location ) {
       require_auth( producer );
+      check(
+         has_auth(get_self()) || 
+         (zswcore::get_zsw_perm_bits(ZSW_PERMS_CORE_SCOPE, producer) & ZSW_CORE_PERMS_REGISTER_PRODUCER) != 0,
+         "ZhongShuWen: User not allowed to perform producer actions"
+      );
       check( url.size() < 512, "url too long" );
 
       std::visit( [&](auto&& auth ) {
@@ -96,6 +107,11 @@ namespace eosiosystem {
 
    void system_contract::unregprod( const name& producer ) {
       require_auth( producer );
+      check(
+         has_auth(get_self()) || 
+         (zswcore::get_zsw_perm_bits(ZSW_PERMS_CORE_SCOPE, producer) & ZSW_CORE_PERMS_REGISTER_PRODUCER) != 0,
+         "ZhongShuWen: User not allowed to perform producer actions"
+      );
 
       const auto& prod = _producers.get( producer.value, "producer not found" );
       _producers.modify( prod, same_payer, [&]( producer_info& info ){
@@ -201,6 +217,11 @@ namespace eosiosystem {
 
    void system_contract::voteproducer( const name& voter_name, const name& proxy, const std::vector<name>& producers ) {
       require_auth( voter_name );
+      check(
+         has_auth(get_self()) || 
+         (zswcore::get_zsw_perm_bits(ZSW_PERMS_CORE_SCOPE, voter_name) & ZSW_CORE_PERMS_VOTE_PRODUCER) != 0,
+         "ZhongShuWen: User not allowed to vote for producers"
+      );
       vote_stake_updater( voter_name );
       update_votes( voter_name, proxy, producers, true );
       auto rex_itr = _rexbalance.find( voter_name.value );
@@ -336,6 +357,11 @@ namespace eosiosystem {
 
    void system_contract::regproxy( const name& proxy, bool isproxy ) {
       require_auth( proxy );
+      check(
+         has_auth(get_self()) || 
+         (zswcore::get_zsw_perm_bits(ZSW_PERMS_CORE_SCOPE, proxy) & ZSW_CORE_PERMS_VOTE_PRODUCER) != 0,
+         "ZhongShuWen: User not allowed to vote for producers"
+      );
 
       auto pitr = _voters.find( proxy.value );
       if ( pitr != _voters.end() ) {

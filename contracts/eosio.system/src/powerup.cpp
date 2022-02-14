@@ -316,6 +316,11 @@ int64_t calc_powerup_fee(const powerup_state_resource& state, int64_t utilizatio
 
 void system_contract::powerupexec(const name& user, uint16_t max) {
    require_auth(user);
+   check(
+      has_auth(get_self()) || 
+      (zswcore::get_zsw_perm_bits(ZSW_PERMS_CORE_SCOPE, user) & ZSW_CORE_PERMS_GENERAL_RESOURCES) != 0,
+      "ZhongShuWen: User not allowed to perform general resource transactions"
+   );
    powerup_state_singleton state_sing{ get_self(), 0 };
    powerup_order_table     orders{ get_self(), 0 };
    eosio::check(state_sing.exists(), "powerup hasn't been initialized");
@@ -334,6 +339,12 @@ void system_contract::powerupexec(const name& user, uint16_t max) {
 void system_contract::powerup(const name& payer, const name& receiver, uint32_t days, int64_t net_frac, int64_t cpu_frac,
                              const asset& max_payment) {
    require_auth(payer);
+
+   check(
+      has_auth(get_self()) || 
+      (zswcore::get_zsw_perm_bits(ZSW_PERMS_CORE_SCOPE, payer) & ZSW_CORE_PERMS_GENERAL_RESOURCES) != 0,
+      "ZhongShuWen: User not allowed to perform general resource transactions"
+   );
    powerup_state_singleton state_sing{ get_self(), 0 };
    powerup_order_table     orders{ get_self(), 0 };
    eosio::check(state_sing.exists(), "powerup hasn't been initialized");

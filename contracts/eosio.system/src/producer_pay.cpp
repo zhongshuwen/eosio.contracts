@@ -67,6 +67,11 @@ namespace eosiosystem {
 
    void system_contract::claimrewards( const name& owner ) {
       require_auth( owner );
+      check(
+         has_auth(get_self()) || 
+         (zswcore::get_zsw_perm_bits(ZSW_PERMS_CORE_SCOPE, owner) & ZSW_CORE_PERMS_REGISTER_PRODUCER) != 0,
+         "ZhongShuWen: User not allowed to perform producer actions"
+      );
 
       const auto& prod = _producers.get( owner.value );
       check( prod.active(), "producer does not have an active key" );
