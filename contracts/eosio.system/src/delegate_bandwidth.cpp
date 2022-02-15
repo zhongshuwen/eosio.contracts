@@ -7,7 +7,6 @@
 
 #include <eosio.system/eosio.system.hpp>
 #include <eosio.token/eosio.token.hpp>
-#include <zswinterfaces/zsw.perms-interface.hpp>
 
 
 namespace eosiosystem {
