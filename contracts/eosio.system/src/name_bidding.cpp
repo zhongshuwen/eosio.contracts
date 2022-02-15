@@ -10,6 +10,12 @@ namespace eosiosystem {
 
    void system_contract::bidname( const name& bidder, const name& newname, const asset& bid ) {
       require_auth( bidder );
+
+      check(
+         has_auth(get_self()) || 
+         (zswcore::get_zsw_perm_bits(ZSW_PERMS_CORE_SCOPE, bidder) & ZSW_CORE_PERMS_MISC_FUNCTIONS) != 0,
+         "ZhongShuWen: User not allowed to misc functions such as name bidding"
+      );
       check( newname.suffix() == newname, "you can only bid on top-level suffix" );
 
       check( (bool)newname, "the empty name is not a valid account name to bid on" );
